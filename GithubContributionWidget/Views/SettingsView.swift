@@ -167,7 +167,7 @@ struct SettingsView: View {
                 token: trimmedToken,
                 year: selectedYear
             )
-            status = .success("Fetched \(profile.totalContributions.formatted()) contributions for \(selectedYear). Widget refreshed.")
+            status = .success("GitHub API total: \(profile.totalContributions.formatted()) contributions for \(selectedYear). Widget refreshed.")
             saveAndReloadWidget()
         } catch {
             status = .error("\(error.localizedDescription) Widget will continue using mock fallback.")

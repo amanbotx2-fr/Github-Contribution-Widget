@@ -41,16 +41,25 @@ struct GitHubService {
             throw GitHubServiceError.missingCredentials
         }
 
-        let calendar = Calendar(identifier: .gregorian)
+        let utc = TimeZone(secondsFromGMT: 0)!
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = utc
         var startComponents = DateComponents()
         startComponents.calendar = calendar
         startComponents.year = year
         startComponents.month = 1
         startComponents.day = 1
-        startComponents.timeZone = TimeZone(secondsFromGMT: 0)
+        startComponents.hour = 0
+        startComponents.minute = 0
+        startComponents.second = 0
+        startComponents.timeZone = utc
 
         var endComponents = startComponents
-        endComponents.year = year + 1
+        endComponents.month = 12
+        endComponents.day = 31
+        endComponents.hour = 23
+        endComponents.minute = 59
+        endComponents.second = 59
 
         guard let from = startComponents.date, let to = endComponents.date else {
             throw GitHubServiceError.invalidResponse
