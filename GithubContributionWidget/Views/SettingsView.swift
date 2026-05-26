@@ -3,9 +3,9 @@ import WidgetKit
 
 struct SettingsView: View {
     @AppStorage(GitHubSettings.usernameKey, store: GitHubSettings.store) private var username = ""
-    @AppStorage(GitHubSettings.tokenKey, store: GitHubSettings.store) private var token = ""
     @AppStorage(GitHubSettings.selectedYearKey, store: GitHubSettings.store) private var selectedYear = Calendar.current.component(.year, from: Date())
 
+    @State private var token = ""
     @State private var status = SettingsStatus.fallback("Mock fallback is active until username and token are saved.")
 
     private var yearRange: ClosedRange<Int> {
@@ -55,7 +55,11 @@ struct SettingsView: View {
         .formStyle(.grouped)
         .padding(20)
         .frame(width: 420)
-        .onAppear(perform: updateStatusForStoredValues)
+        .onAppear {
+            GitHubSettings.migrateLegacyTokenIfNeeded()
+            token = GitHubSettings.personalAccessToken
+            updateStatusForStoredValues()
+        }
         .onChange(of: username) { _, _ in
             updateStatusForStoredValues()
             saveAndReloadWidget()
@@ -81,6 +85,7 @@ struct SettingsView: View {
     }
 
     private func saveAndReloadWidget() {
+        GitHubSettings.setPersonalAccessToken(token)
         GitHubSettings.store.synchronize()
         WidgetCenter.shared.reloadAllTimelines()
         if case .ready = status {

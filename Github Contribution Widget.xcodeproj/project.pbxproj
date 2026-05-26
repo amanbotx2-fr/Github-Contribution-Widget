@@ -21,6 +21,8 @@
 		100000000000000000000012 /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* GitHubService.swift */; };
 		100000000000000000000013 /* GitHubSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000010 /* GitHubSettings.swift */; };
 		100000000000000000000014 /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* GitHubService.swift */; };
+		100000000000000000000015 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000015 /* KeychainService.swift */; };
+		100000000000000000000016 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000015 /* KeychainService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +64,7 @@
 		200000000000000000000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		200000000000000000000013 /* GithubContributionWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GithubContributionWidget.entitlements; sourceTree = "<group>"; };
 		200000000000000000000014 /* GithubContributionWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GithubContributionWidgetExtension.entitlements; sourceTree = "<group>"; };
+		200000000000000000000015 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +129,7 @@
 				200000000000000000000004 /* ContributionWidgetCard.swift */,
 				200000000000000000000010 /* GitHubSettings.swift */,
 				200000000000000000000011 /* GitHubService.swift */,
+				200000000000000000000015 /* KeychainService.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -255,6 +259,7 @@
 				100000000000000000000010 /* SettingsView.swift in Sources */,
 				100000000000000000000011 /* GitHubSettings.swift in Sources */,
 				100000000000000000000012 /* GitHubService.swift in Sources */,
+				100000000000000000000015 /* KeychainService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,6 +273,7 @@
 				100000000000000000000008 /* ContributionWidgetCard.swift in Sources */,
 				100000000000000000000013 /* GitHubSettings.swift in Sources */,
 				100000000000000000000014 /* GitHubService.swift in Sources */,
+				100000000000000000000016 /* KeychainService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

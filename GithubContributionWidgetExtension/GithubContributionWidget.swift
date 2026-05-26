@@ -20,6 +20,8 @@ struct GithubContributionProvider: TimelineProvider {
     }
 
     private func fetchProfile() async -> ContributionProfile {
+        GitHubSettings.migrateLegacyTokenIfNeeded()
+
         do {
             return try await GitHubService().contributionProfile(
                 username: GitHubSettings.username,
