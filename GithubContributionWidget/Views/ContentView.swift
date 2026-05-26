@@ -21,12 +21,12 @@ struct ContentView: View {
                 HStack(alignment: .top, spacing: 18) {
                     WidgetPreviewShell(label: "Medium") {
                         ContributionWidgetCard(profile: profile, size: .medium)
-                            .frame(width: 360, height: 170)
+                            .frame(width: 330, height: 155)
                     }
 
                     WidgetPreviewShell(label: "Large") {
                         ContributionWidgetCard(profile: profile, size: .large)
-                            .frame(width: 360, height: 360)
+                            .frame(width: 330, height: 345)
                     }
                 }
             }

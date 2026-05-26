@@ -4,30 +4,65 @@ enum ContributionWidgetSize {
     case medium
     case large
 
+    var cornerRadius: CGFloat {
+        switch self {
+        case .medium:
+            return 18
+        case .large:
+            return 22
+        }
+    }
+
+    var contentPadding: CGFloat {
+        switch self {
+        case .medium:
+            return 12
+        case .large:
+            return 16
+        }
+    }
+
     var heatmapColumns: Int {
         switch self {
         case .medium:
-            return 14
+            return 13
         case .large:
-            return 24
+            return 23
         }
     }
 
     var heatmapCell: CGFloat {
         switch self {
         case .medium:
-            return 6
+            return 6.5
         case .large:
-            return 9
+            return 8.5
         }
     }
 
     var heatmapGap: CGFloat {
         switch self {
         case .medium:
-            return 3
+            return 2.5
         case .large:
-            return 4
+            return 3.5
+        }
+    }
+
+    var heatmapWidth: CGFloat {
+        CGFloat(heatmapColumns) * heatmapCell + CGFloat(heatmapColumns - 1) * heatmapGap
+    }
+
+    var heatmapHeight: CGFloat {
+        7 * heatmapCell + 6 * heatmapGap
+    }
+
+    var legendCell: CGFloat {
+        switch self {
+        case .medium:
+            return 7
+        case .large:
+            return 9
         }
     }
 }
@@ -45,57 +80,70 @@ struct ContributionWidgetCard: View {
                 largeLayout
             }
         }
-        .padding(size == .medium ? 14 : 18)
+        .padding(size.contentPadding)
         .background(GlassWidgetBackground())
-        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: size.cornerRadius, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .strokeBorder(Color.white.opacity(0.14), lineWidth: 1)
+            RoundedRectangle(cornerRadius: size.cornerRadius, style: .continuous)
+                .strokeBorder(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.24), Color.white.opacity(0.07)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
         }
+        .shadow(color: .black.opacity(size == .medium ? 0.20 : 0.26), radius: size == .medium ? 10 : 16, y: 8)
         .environment(\.colorScheme, .dark)
     }
 
     private var mediumLayout: some View {
-        HStack(alignment: .top, spacing: 14) {
-            VStack(alignment: .leading, spacing: 12) {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 9) {
                 HeaderView(profile: profile, compact: true)
 
-                VStack(alignment: .leading, spacing: 8) {
-                    MetricView(value: profile.totalContributions.formatted(), label: "Contributions", highlighted: true)
-                    HStack(spacing: 14) {
-                        MetricView(value: "\(profile.currentStreak)", label: "Current", highlighted: false)
-                        MetricView(value: "\(profile.longestStreak)", label: "Longest", highlighted: false)
+                VStack(alignment: .leading, spacing: 6) {
+                    MetricView(value: profile.totalContributions.formatted(), label: "Contributions", highlighted: true, compact: true)
+
+                    HStack(spacing: 10) {
+                        MetricView(value: "\(profile.currentStreak)", label: "Current", highlighted: false, compact: true)
+                        MetricView(value: "\(profile.longestStreak)", label: "Longest", highlighted: false, compact: true)
                     }
                 }
             }
-            .frame(width: 132, alignment: .leading)
+            .frame(width: 124, alignment: .leading)
 
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 8) {
                 ContributionHeatmapView(profile: profile, size: size)
-                ContributionLegendView()
+                ContributionLegendView(size: size)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(width: size.heatmapWidth, alignment: .leading)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 
     private var largeLayout: some View {
-        VStack(alignment: .leading, spacing: 18) {
+        VStack(alignment: .leading, spacing: 16) {
             HeaderView(profile: profile, compact: false)
 
-            HStack(spacing: 18) {
-                MetricView(value: profile.totalContributions.formatted(), label: "Contributions", highlighted: true)
+            HStack(alignment: .firstTextBaseline, spacing: 16) {
+                MetricView(value: profile.totalContributions.formatted(), label: "Contributions", highlighted: true, compact: false)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                MetricView(value: "\(profile.currentStreak)", label: "Current streak", highlighted: false)
+                MetricView(value: "\(profile.currentStreak)", label: "Current streak", highlighted: false, compact: false)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                MetricView(value: "\(profile.longestStreak)", label: "Longest streak", highlighted: false)
+                MetricView(value: "\(profile.longestStreak)", label: "Longest streak", highlighted: false, compact: false)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
+
+            Spacer(minLength: 0)
 
             VStack(alignment: .leading, spacing: 12) {
                 ContributionHeatmapView(profile: profile, size: size)
-                ContributionLegendView()
+                ContributionLegendView(size: size)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }
 
@@ -104,22 +152,22 @@ private struct HeaderView: View {
     let compact: Bool
 
     var body: some View {
-        HStack(spacing: 10) {
-            GithubAvatarView(size: compact ? 34 : 42)
+        HStack(spacing: compact ? 8 : 10) {
+            GithubAvatarView(size: compact ? 30 : 38)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(profile.username)
-                    .font((compact ? Font.callout : Font.title3).weight(.semibold))
+                    .font((compact ? Font.subheadline : Font.callout).weight(.semibold))
                     .lineLimit(1)
                     .foregroundStyle(.white)
 
                 HStack(spacing: 5) {
                     Circle()
                         .fill(profile.isActive ? Color.githubBrightGreen : Color.secondary)
-                        .frame(width: 7, height: 7)
+                        .frame(width: compact ? 6 : 7, height: compact ? 6 : 7)
 
                     Text(profile.isActive ? "Active now" : "Offline")
-                        .font(.caption)
+                        .font(compact ? .caption2 : .caption)
                         .foregroundStyle(.white.opacity(0.62))
                 }
             }
@@ -149,20 +197,29 @@ private struct MetricView: View {
     let value: String
     let label: String
     let highlighted: Bool
+    let compact: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(value)
-                .font(highlighted ? .system(size: 28, weight: .bold, design: .rounded) : .headline.weight(.semibold))
+                .font(metricFont)
                 .minimumScaleFactor(0.76)
                 .lineLimit(1)
                 .foregroundStyle(highlighted ? Color.githubBrightGreen : Color.white)
 
             Text(label)
-                .font(.caption)
+                .font(compact ? .caption2 : .caption)
                 .lineLimit(1)
-                .foregroundStyle(.white.opacity(0.62))
+                .foregroundStyle(.white.opacity(0.58))
         }
+    }
+
+    private var metricFont: Font {
+        if highlighted {
+            return .system(size: compact ? 24 : 30, weight: .bold, design: .rounded)
+        }
+
+        return compact ? .caption.weight(.semibold) : .headline.weight(.semibold)
     }
 }
 
@@ -185,6 +242,8 @@ private struct ContributionHeatmapView: View {
                 }
             }
         }
+        .frame(width: size.heatmapWidth, height: size.heatmapHeight, alignment: .topLeading)
+        .clipped()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Contribution heatmap")
     }
@@ -202,15 +261,17 @@ private struct HeatmapCell: View {
 }
 
 private struct ContributionLegendView: View {
+    let size: ContributionWidgetSize
+
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: size == .medium ? 5 : 6) {
             Text("Less")
                 .foregroundStyle(.white.opacity(0.62))
 
             ForEach(0..<5, id: \.self) { level in
-                RoundedRectangle(cornerRadius: 3, style: .continuous)
+                RoundedRectangle(cornerRadius: size.legendCell * 0.28, style: .continuous)
                     .fill(Color.contributionLevel(level))
-                    .frame(width: 10, height: 10)
+                    .frame(width: size.legendCell, height: size.legendCell)
             }
 
             Text("More")
@@ -226,16 +287,24 @@ struct GlassWidgetBackground: View {
         ZStack {
             LinearGradient(
                 colors: [
-                    Color(red: 0.08, green: 0.10, blue: 0.20).opacity(0.92),
-                    Color(red: 0.02, green: 0.04, blue: 0.09).opacity(0.94)
+                    Color(red: 0.12, green: 0.13, blue: 0.23).opacity(0.82),
+                    Color(red: 0.03, green: 0.05, blue: 0.10).opacity(0.94),
+                    Color(red: 0.02, green: 0.03, blue: 0.07).opacity(0.98)
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
 
+            RadialGradient(
+                colors: [Color.white.opacity(0.12), Color.clear],
+                center: .topLeading,
+                startRadius: 0,
+                endRadius: 190
+            )
+
             LinearGradient(
                 colors: [
-                    Color.white.opacity(0.12),
+                    Color.white.opacity(0.16),
                     Color.white.opacity(0.02),
                     Color.clear
                 ],

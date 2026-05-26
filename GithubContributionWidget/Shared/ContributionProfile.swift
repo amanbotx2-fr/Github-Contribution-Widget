@@ -1,4 +1,5 @@
 import Foundation
+import Darwin
 
 struct ContributionProfile {
     let username: String
@@ -37,18 +38,22 @@ private extension ContributionProfile {
     static func makeMock() -> ContributionProfile {
         let calendar = Calendar(identifier: .gregorian)
         let today = calendar.startOfDay(for: Date())
-        let dayCount = 26 * 7
+        let dayCount = 30 * 7
 
         let days = (0..<dayCount).compactMap { offset -> ContributionDay? in
             guard let date = calendar.date(byAdding: .day, value: offset - dayCount + 1, to: today) else {
                 return nil
             }
 
-            let wave = (offset * 7 + offset / 3) % 13
-            let isWeekend = calendar.component(.weekday, from: date) == 1 || calendar.component(.weekday, from: date) == 7
-            let base = isWeekend ? max(0, wave - 8) : max(0, wave - 4)
-            let burst = offset % 17 == 0 ? 8 : 0
-            let quiet = offset % 29 == 0 ? 0 : base + burst
+            let weekday = calendar.component(.weekday, from: date)
+            let isWeekend = weekday == 1 || weekday == 7
+            let seasonal = Int((sin(Double(offset) * 0.21) + 1) * 3.2)
+            let cadence = (offset * 5 + offset / 4) % 9
+            let sprint = (offset / 21) % 3 == 1 ? 3 : 0
+            let burst = [11, 37, 74, 119, 156].contains(offset) ? 8 : 0
+            let restDay = offset % 19 == 0 || offset % 43 == 0
+            let weekendPenalty = isWeekend ? 4 : 0
+            let quiet = restDay ? 0 : max(0, seasonal + cadence + sprint + burst - weekendPenalty)
 
             return ContributionDay(date: date, count: quiet)
         }
