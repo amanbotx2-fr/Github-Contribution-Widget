@@ -52,6 +52,11 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
 
+                    Text("Public contributions are shown unless your token allows private contribution counts. For profile totals that include private activity, use a classic token with read:user.")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
                     Link("Open GitHub token settings", destination: URL(string: "https://github.com/settings/tokens")!)
                         .font(.callout)
                 }
@@ -82,6 +87,9 @@ struct SettingsView: View {
             } footer: {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("The widget uses mock data when either field is empty or GitHub cannot be reached.")
+                        .foregroundStyle(.secondary)
+
+                    Text("Public contributions are shown unless your token allows private contribution counts.")
                         .foregroundStyle(.secondary)
 
                     Label(status.message, systemImage: status.systemImage)

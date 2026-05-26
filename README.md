@@ -20,9 +20,15 @@ installed on the desktop.
 ## Creating A GitHub Token
 
 1. Open GitHub token settings from the app or visit `https://github.com/settings/tokens`.
-2. Create a Personal Access Token.
-3. Copy the token once and paste it into the app settings.
-4. Keep the token read-only for public contribution data; do not grant write
+2. For public contribution counts, create any Personal Access Token that can use
+   the GitHub GraphQL API.
+3. For profile totals that include private/internal contributions, create a
+   **Personal access token (classic)** with the `read:user` scope. GitHub's
+   GraphQL `ContributionsCollection` documents private and internal
+   contributions as requiring this optional scope; fine-grained PATs do not
+   expose a direct `read:user` scope and may return public-only totals.
+4. Copy the token once and paste it into the app settings.
+5. Keep the token read-only for contribution data; do not grant write
    access unless you need it for another workflow.
 
 ## Adding The Widget
@@ -57,3 +63,6 @@ contribution data.
   re-add the widget, or rebuild and run the app once from Xcode.
 - If GitHub fetch fails, create a new token and make sure the account can access
   the requested contribution year.
+- If Test Fetch shows fewer contributions than your GitHub profile, your token
+  is probably returning public contribution counts only. Use a classic PAT with
+  `read:user` if you want private contribution counts included.
