@@ -5,6 +5,17 @@ enum GitHubServiceError: Error {
     case invalidResponse
 }
 
+extension GitHubServiceError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .missingCredentials:
+            return "Username or token is missing."
+        case .invalidResponse:
+            return "GitHub did not return contribution data."
+        }
+    }
+}
+
 struct GitHubService {
     private let endpoint = URL(string: "https://api.github.com/graphql")!
     private let session: URLSession
