@@ -26,6 +26,8 @@ extension GitHubServiceError: LocalizedError {
 }
 
 struct GitHubService {
+    static let requestVersion = "calendar-v2-inclusive-utc"
+
     private let endpoint = URL(string: "https://api.github.com/graphql")!
     private let session: URLSession
 
@@ -65,9 +67,12 @@ struct GitHubService {
             throw GitHubServiceError.invalidResponse
         }
 
+        let fromString = from.iso8601String
+        let toString = to.iso8601String
+
         let requestBody = GraphQLRequest(
             query: Self.contributionCalendarQuery,
-            variables: GraphQLVariables(username: username, from: from.iso8601String, to: to.iso8601String)
+            variables: GraphQLVariables(username: username, from: fromString, to: toString)
         )
 
         var request = URLRequest(url: endpoint)
@@ -95,11 +100,24 @@ struct GitHubService {
             throw GitHubServiceError.badUsername
         }
 
+        let contributionCalendar = user.contributionsCollection.contributionCalendar
+        let fetchDebug = ContributionFetchDebug(
+            serviceVersion: Self.requestVersion,
+            username: user.login,
+            year: year,
+            from: fromString,
+            to: toString,
+            apiTotal: contributionCalendar.totalContributions,
+            restrictedContributionsCount: user.contributionsCollection.restrictedContributionsCount
+        )
+        print("[GitHubService] \(fetchDebug.consoleDescription)")
+
         return ContributionProfile(
             username: user.login,
             isActive: true,
-            totalContributions: user.contributionsCollection.contributionCalendar.totalContributions,
-            days: user.contributionsCollection.contributionCalendar.weeks.flatMap(\.contributionDays)
+            totalContributions: contributionCalendar.totalContributions,
+            days: contributionCalendar.weeks.flatMap(\.contributionDays),
+            fetchDebug: fetchDebug
         )
     }
 
@@ -108,6 +126,7 @@ struct GitHubService {
       user(login: $username) {
         login
         contributionsCollection(from: $from, to: $to) {
+          restrictedContributionsCount
           contributionCalendar {
             totalContributions
             weeks {
@@ -195,6 +214,7 @@ private struct GraphQLUser: Decodable {
 }
 
 private struct ContributionsCollection: Decodable {
+    let restrictedContributionsCount: Int
     let contributionCalendar: ContributionCalendar
 }
 

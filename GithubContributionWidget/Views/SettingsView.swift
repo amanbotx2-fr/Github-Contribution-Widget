@@ -167,12 +167,26 @@ struct SettingsView: View {
                 token: trimmedToken,
                 year: selectedYear
             )
-            status = .success("GitHub API total: \(profile.totalContributions.formatted()) contributions for \(selectedYear). Widget refreshed.")
+            status = .success(successMessage(for: profile))
             saveAndReloadWidget()
         } catch {
             status = .error("\(error.localizedDescription) Widget will continue using mock fallback.")
             saveAndReloadWidget()
         }
+    }
+
+    private func successMessage(for profile: ContributionProfile) -> String {
+        guard let debug = profile.fetchDebug else {
+            return "GitHub API total: \(profile.totalContributions.formatted()) contributions for \(selectedYear). Widget refreshed."
+        }
+
+        let debugText = "username: \(debug.username), year: \(debug.year), from: \(debug.from), to: \(debug.to), API total: \(debug.apiTotal), service: \(debug.serviceVersion)"
+
+        if debug.restrictedContributionsCount > 0 {
+            return "\(debug.apiTotal) public contributions fetched. GitHub profile may include private contributions. \(debugText), restricted/private count: \(debug.restrictedContributionsCount)."
+        }
+
+        return "GitHub API total: \(debug.apiTotal) contributions. \(debugText). Widget refreshed."
     }
 }
 

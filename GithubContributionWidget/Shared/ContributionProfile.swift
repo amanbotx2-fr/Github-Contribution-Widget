@@ -8,19 +8,21 @@ struct ContributionProfile {
     let currentStreak: Int
     let longestStreak: Int
     let days: [ContributionDay]
+    let fetchDebug: ContributionFetchDebug?
 
     static let mock = ContributionProfile.makeMock()
 
-    init(username: String, isActive: Bool, totalContributions: Int, currentStreak: Int, longestStreak: Int, days: [ContributionDay]) {
+    init(username: String, isActive: Bool, totalContributions: Int, currentStreak: Int, longestStreak: Int, days: [ContributionDay], fetchDebug: ContributionFetchDebug? = nil) {
         self.username = username
         self.isActive = isActive
         self.totalContributions = totalContributions
         self.currentStreak = currentStreak
         self.longestStreak = longestStreak
         self.days = days
+        self.fetchDebug = fetchDebug
     }
 
-    init(username: String, isActive: Bool, totalContributions: Int, days: [ContributionDay]) {
+    init(username: String, isActive: Bool, totalContributions: Int, days: [ContributionDay], fetchDebug: ContributionFetchDebug? = nil) {
         let sortedDays = days.sorted { $0.date < $1.date }
         let streaks = Self.streaks(from: sortedDays)
 
@@ -30,8 +32,23 @@ struct ContributionProfile {
             totalContributions: totalContributions,
             currentStreak: streaks.current,
             longestStreak: streaks.longest,
-            days: sortedDays
+            days: sortedDays,
+            fetchDebug: fetchDebug
         )
+    }
+}
+
+struct ContributionFetchDebug {
+    let serviceVersion: String
+    let username: String
+    let year: Int
+    let from: String
+    let to: String
+    let apiTotal: Int
+    let restrictedContributionsCount: Int
+
+    var consoleDescription: String {
+        "version=\(serviceVersion) username=\(username) year=\(year) from=\(from) to=\(to) apiTotal=\(apiTotal) restrictedContributionsCount=\(restrictedContributionsCount)"
     }
 }
 
