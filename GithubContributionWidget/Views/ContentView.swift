@@ -8,14 +8,20 @@ struct ContentView: View {
             AppBackdrop()
 
             VStack(alignment: .leading, spacing: 18) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Github Contribution Widget")
-                        .font(.title2.weight(.semibold))
-                        .foregroundStyle(.white)
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("GitHub Contribution Widget")
+                            .font(.title2.weight(.semibold))
+                            .foregroundStyle(.white)
 
-                    Text("Mock data preview for macOS WidgetKit medium and large families.")
-                        .font(.callout)
-                        .foregroundStyle(.white.opacity(0.62))
+                        Text("Mock data preview for macOS WidgetKit medium and large families.")
+                            .font(.callout)
+                            .foregroundStyle(.white.opacity(0.62))
+                    }
+
+                    Spacer(minLength: 24)
+
+                    AboutSummary()
                 }
 
                 HStack(alignment: .top, spacing: 18) {
@@ -32,6 +38,32 @@ struct ContentView: View {
             }
             .padding(28)
         }
+    }
+}
+
+private struct AboutSummary: View {
+    private var versionText: String {
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
+        return "Version \(version) (\(build))"
+    }
+
+    var body: some View {
+        VStack(alignment: .trailing, spacing: 4) {
+            Text("About")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.74))
+
+            Text(versionText)
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.58))
+
+            Text("SwiftUI + WidgetKit")
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.58))
+        }
+        .multilineTextAlignment(.trailing)
+        .accessibilityElement(children: .combine)
     }
 }
 

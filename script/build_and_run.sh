@@ -5,7 +5,7 @@ PROJECT="Github Contribution Widget.xcodeproj"
 SCHEME="Github Contribution Widget"
 CONFIGURATION="Debug"
 DERIVED_DATA_PATH=".build/DerivedData"
-APP_NAME="Github Contribution Widget"
+APP_NAME="GitHub Contribution Widget"
 APP_PATH="${DERIVED_DATA_PATH}/Build/Products/${CONFIGURATION}/${APP_NAME}.app"
 
 if pgrep -x "${APP_NAME}" >/dev/null 2>&1; then

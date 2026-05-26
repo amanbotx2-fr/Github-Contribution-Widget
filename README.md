@@ -1,6 +1,11 @@
-# Github Contribution Widget
+# GitHub Contribution Widget
 
 Minimal macOS SwiftUI + WidgetKit app for a glassy GitHub contribution widget.
+
+## Screenshots
+
+Screenshots will be added after the first signed local run with the widget
+installed on the desktop.
 
 ## Setup
 

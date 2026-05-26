@@ -59,7 +59,7 @@
 		200000000000000000000006 /* GithubContributionWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubContributionWidgetBundle.swift; sourceTree = "<group>"; };
 		200000000000000000000007 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		200000000000000000000008 /* GithubContributionWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GithubContributionWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		200000000000000000000009 /* Github Contribution Widget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Github Contribution Widget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		200000000000000000000009 /* GitHub Contribution Widget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GitHub Contribution Widget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		200000000000000000000010 /* GitHubSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSettings.swift; sourceTree = "<group>"; };
 		200000000000000000000011 /* GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubService.swift; sourceTree = "<group>"; };
 		200000000000000000000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -151,7 +151,7 @@
 		600000000000000000000007 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				200000000000000000000009 /* Github Contribution Widget.app */,
+				200000000000000000000009 /* GitHub Contribution Widget.app */,
 				200000000000000000000008 /* GithubContributionWidgetExtension.appex */,
 			);
 			name = Products;
@@ -175,8 +175,8 @@
 				300000000000000000000002 /* PBXTargetDependency */,
 			);
 			name = "Github Contribution Widget";
-			productName = "Github Contribution Widget";
-			productReference = 200000000000000000000009 /* Github Contribution Widget.app */;
+			productName = "GitHub Contribution Widget";
+			productReference = 200000000000000000000009 /* GitHub Contribution Widget.app */;
 			productType = "com.apple.product-type.application";
 		};
 		222222222222222222222222 /* GithubContributionWidgetExtension */ = {
@@ -417,7 +417,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Github Contribution Widget";
+				INFOPLIST_KEY_CFBundleDisplayName = "GitHub Contribution Widget";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -425,7 +425,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amankumar.githubcontributionwidget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "GitHub Contribution Widget";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -440,7 +440,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Github Contribution Widget";
+				INFOPLIST_KEY_CFBundleDisplayName = "GitHub Contribution Widget";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -448,7 +448,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.amankumar.githubcontributionwidget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "GitHub Contribution Widget";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

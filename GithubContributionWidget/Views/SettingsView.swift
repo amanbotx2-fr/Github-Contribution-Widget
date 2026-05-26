@@ -159,7 +159,7 @@ struct SettingsView: View {
             status = .success("Fetched \(profile.totalContributions.formatted()) contributions for \(selectedYear). Widget refreshed.")
             saveAndReloadWidget()
         } catch {
-            status = .error("GitHub fetch failed. Widget will continue using mock fallback.")
+            status = .error("\(error.localizedDescription) Widget will continue using mock fallback.")
             saveAndReloadWidget()
         }
     }

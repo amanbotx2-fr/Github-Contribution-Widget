@@ -2,6 +2,9 @@ import Foundation
 
 enum GitHubServiceError: Error {
     case missingCredentials
+    case badToken
+    case badUsername
+    case rateLimited
     case invalidResponse
 }
 
@@ -10,6 +13,12 @@ extension GitHubServiceError: LocalizedError {
         switch self {
         case .missingCredentials:
             return "Username or token is missing."
+        case .badToken:
+            return "GitHub rejected the token. Create a new Personal Access Token and try again."
+        case .badUsername:
+            return "GitHub could not find that username."
+        case .rateLimited:
+            return "GitHub API rate limit reached. Wait a while or try a token with available quota."
         case .invalidResponse:
             return "GitHub did not return contribution data."
         }
@@ -60,17 +69,21 @@ struct GitHubService {
         request.httpBody = try JSONEncoder().encode(requestBody)
 
         let (data, response) = try await session.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+        guard let httpResponse = response as? HTTPURLResponse else {
             throw GitHubServiceError.invalidResponse
+        }
+
+        guard 200..<300 ~= httpResponse.statusCode else {
+            throw Self.error(for: httpResponse, data: data)
         }
 
         let graphQLResponse = try JSONDecoder.github.decode(GraphQLResponse.self, from: data)
-        if graphQLResponse.errors?.isEmpty == false {
-            throw GitHubServiceError.invalidResponse
+        if let errors = graphQLResponse.errors, !errors.isEmpty {
+            throw Self.error(for: errors)
         }
 
         guard let user = graphQLResponse.data?.user else {
-            throw GitHubServiceError.invalidResponse
+            throw GitHubServiceError.badUsername
         }
 
         return ContributionProfile(
@@ -99,6 +112,44 @@ struct GitHubService {
       }
     }
     """
+
+    private static func error(for response: HTTPURLResponse, data: Data) -> GitHubServiceError {
+        if response.statusCode == 401 {
+            return .badToken
+        }
+
+        if response.statusCode == 403, response.value(forHTTPHeaderField: "X-RateLimit-Remaining") == "0" {
+            return .rateLimited
+        }
+
+        let message = (try? JSONDecoder.github.decode(GitHubErrorMessage.self, from: data).message.lowercased()) ?? ""
+        if message.contains("rate limit") {
+            return .rateLimited
+        }
+
+        if message.contains("bad credentials") || message.contains("requires authentication") {
+            return .badToken
+        }
+
+        return .invalidResponse
+    }
+
+    private static func error(for errors: [GraphQLError]) -> GitHubServiceError {
+        let message = errors.map(\.message).joined(separator: " ").lowercased()
+        if message.contains("rate limit") {
+            return .rateLimited
+        }
+
+        if message.contains("bad credentials") || message.contains("requires authentication") || message.contains("unauthorized") {
+            return .badToken
+        }
+
+        if message.contains("could not resolve to a user") || message.contains("user") {
+            return .badUsername
+        }
+
+        return .invalidResponse
+    }
 }
 
 private struct GraphQLRequest: Encodable {
@@ -118,6 +169,10 @@ private struct GraphQLResponse: Decodable {
 }
 
 private struct GraphQLError: Decodable {
+    let message: String
+}
+
+private struct GitHubErrorMessage: Decodable {
     let message: String
 }
 
