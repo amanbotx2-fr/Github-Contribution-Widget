@@ -6,8 +6,8 @@ struct GithubContributionWidgetApp: App {
         WindowGroup {
             ContentView()
         }
-        .windowStyle(.hiddenTitleBar)
-        .defaultSize(width: 720, height: 460)
+        .defaultSize(width: 460, height: 420)
+        .windowResizability(.contentSize)
 
         Settings {
             SettingsView()
