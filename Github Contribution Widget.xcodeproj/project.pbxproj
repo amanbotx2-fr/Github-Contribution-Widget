@@ -16,6 +16,11 @@
 		100000000000000000000007 /* ContributionProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000003 /* ContributionProfile.swift */; };
 		100000000000000000000008 /* ContributionWidgetCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000004 /* ContributionWidgetCard.swift */; };
 		100000000000000000000009 /* GithubContributionWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 200000000000000000000008 /* GithubContributionWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		100000000000000000000010 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000012 /* SettingsView.swift */; };
+		100000000000000000000011 /* GitHubSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000010 /* GitHubSettings.swift */; };
+		100000000000000000000012 /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* GitHubService.swift */; };
+		100000000000000000000013 /* GitHubSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000010 /* GitHubSettings.swift */; };
+		100000000000000000000014 /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* GitHubService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +57,11 @@
 		200000000000000000000007 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		200000000000000000000008 /* GithubContributionWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GithubContributionWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		200000000000000000000009 /* Github Contribution Widget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Github Contribution Widget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		200000000000000000000010 /* GitHubSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSettings.swift; sourceTree = "<group>"; };
+		200000000000000000000011 /* GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubService.swift; sourceTree = "<group>"; };
+		200000000000000000000012 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		200000000000000000000013 /* GithubContributionWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GithubContributionWidget.entitlements; sourceTree = "<group>"; };
+		200000000000000000000014 /* GithubContributionWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GithubContributionWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +97,7 @@
 				600000000000000000000003 /* App */,
 				600000000000000000000004 /* Views */,
 				600000000000000000000005 /* Shared */,
+				200000000000000000000013 /* GithubContributionWidget.entitlements */,
 			);
 			path = GithubContributionWidget;
 			sourceTree = "<group>";
@@ -103,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				200000000000000000000002 /* ContentView.swift */,
+				200000000000000000000012 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -112,6 +124,8 @@
 			children = (
 				200000000000000000000003 /* ContributionProfile.swift */,
 				200000000000000000000004 /* ContributionWidgetCard.swift */,
+				200000000000000000000010 /* GitHubSettings.swift */,
+				200000000000000000000011 /* GitHubService.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -122,6 +136,7 @@
 				200000000000000000000005 /* GithubContributionWidget.swift */,
 				200000000000000000000006 /* GithubContributionWidgetBundle.swift */,
 				200000000000000000000007 /* Info.plist */,
+				200000000000000000000014 /* GithubContributionWidgetExtension.entitlements */,
 			);
 			path = GithubContributionWidgetExtension;
 			sourceTree = "<group>";
@@ -237,6 +252,9 @@
 				100000000000000000000002 /* ContentView.swift in Sources */,
 				100000000000000000000003 /* ContributionProfile.swift in Sources */,
 				100000000000000000000004 /* ContributionWidgetCard.swift in Sources */,
+				100000000000000000000010 /* SettingsView.swift in Sources */,
+				100000000000000000000011 /* GitHubSettings.swift in Sources */,
+				100000000000000000000012 /* GitHubService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +266,8 @@
 				100000000000000000000006 /* GithubContributionWidgetBundle.swift in Sources */,
 				100000000000000000000007 /* ContributionProfile.swift in Sources */,
 				100000000000000000000008 /* ContributionWidgetCard.swift in Sources */,
+				100000000000000000000013 /* GitHubSettings.swift in Sources */,
+				100000000000000000000014 /* GitHubService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,7 +401,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = GithubContributionWidget/GithubContributionWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -404,7 +424,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = GithubContributionWidget/GithubContributionWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -427,6 +447,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = GithubContributionWidgetExtension/GithubContributionWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -448,6 +469,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = GithubContributionWidgetExtension/GithubContributionWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = NO;

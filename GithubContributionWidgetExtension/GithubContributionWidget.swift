@@ -11,9 +11,24 @@ struct GithubContributionProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<GithubContributionEntry>) -> Void) {
-        let entry = GithubContributionEntry(date: Date(), profile: .mock)
-        let nextRefresh = Calendar.current.date(byAdding: .hour, value: 6, to: entry.date) ?? entry.date
-        completion(Timeline(entries: [entry], policy: .after(nextRefresh)))
+        Task {
+            let profile = await fetchProfile()
+            let entry = GithubContributionEntry(date: Date(), profile: profile)
+            let nextRefresh = Calendar.current.date(byAdding: .hour, value: 6, to: entry.date) ?? entry.date
+            completion(Timeline(entries: [entry], policy: .after(nextRefresh)))
+        }
+    }
+
+    private func fetchProfile() async -> ContributionProfile {
+        do {
+            return try await GitHubService().contributionProfile(
+                username: GitHubSettings.username,
+                token: GitHubSettings.personalAccessToken,
+                year: GitHubSettings.selectedYear
+            )
+        } catch {
+            return .mock
+        }
     }
 }
 
@@ -47,7 +62,7 @@ struct GithubContributionWidget: Widget {
             GithubContributionWidgetEntryView(entry: entry)
         }
         .configurationDisplayName("GitHub Contributions")
-        .description("Minimal GitHub contribution activity with mock data.")
+        .description("Minimal GitHub contribution activity.")
         .supportedFamilies([.systemMedium, .systemLarge])
     }
 }

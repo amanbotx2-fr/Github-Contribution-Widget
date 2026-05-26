@@ -10,6 +10,29 @@ struct ContributionProfile {
     let days: [ContributionDay]
 
     static let mock = ContributionProfile.makeMock()
+
+    init(username: String, isActive: Bool, totalContributions: Int, currentStreak: Int, longestStreak: Int, days: [ContributionDay]) {
+        self.username = username
+        self.isActive = isActive
+        self.totalContributions = totalContributions
+        self.currentStreak = currentStreak
+        self.longestStreak = longestStreak
+        self.days = days
+    }
+
+    init(username: String, isActive: Bool, totalContributions: Int, days: [ContributionDay]) {
+        let sortedDays = days.sorted { $0.date < $1.date }
+        let streaks = Self.streaks(from: sortedDays)
+
+        self.init(
+            username: username,
+            isActive: isActive,
+            totalContributions: totalContributions,
+            currentStreak: streaks.current,
+            longestStreak: streaks.longest,
+            days: sortedDays
+        )
+    }
 }
 
 struct ContributionDay: Identifiable {
@@ -35,6 +58,31 @@ struct ContributionDay: Identifiable {
 }
 
 private extension ContributionProfile {
+    static func streaks(from days: [ContributionDay]) -> (current: Int, longest: Int) {
+        var longest = 0
+        var running = 0
+
+        for day in days {
+            if day.count > 0 {
+                running += 1
+                longest = max(longest, running)
+            } else {
+                running = 0
+            }
+        }
+
+        var current = 0
+        for day in days.reversed() {
+            if day.count > 0 {
+                current += 1
+            } else if current > 0 {
+                break
+            }
+        }
+
+        return (current, longest)
+    }
+
     static func makeMock() -> ContributionProfile {
         let calendar = Calendar(identifier: .gregorian)
         let today = calendar.startOfDay(for: Date())
@@ -61,9 +109,7 @@ private extension ContributionProfile {
         return ContributionProfile(
             username: "aman kumar",
             isActive: true,
-            totalContributions: 1243,
-            currentStreak: 18,
-            longestStreak: 128,
+            totalContributions: days.reduce(0) { $0 + $1.count },
             days: days
         )
     }

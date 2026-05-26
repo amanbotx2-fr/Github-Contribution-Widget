@@ -8,5 +8,9 @@ struct GithubContributionWidgetApp: App {
         }
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 720, height: 460)
+
+        Settings {
+            SettingsView()
+        }
     }
 }
