@@ -12,8 +12,48 @@ struct SettingsView: View {
         2008...Calendar.current.component(.year, from: Date())
     }
 
+    private var trimmedUsername: String {
+        username.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var trimmedToken: String {
+        token.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var validationMessage: String? {
+        if trimmedUsername.isEmpty {
+            return "Enter a GitHub username."
+        }
+
+        if trimmedToken.isEmpty {
+            return "Paste a GitHub Personal Access Token."
+        }
+
+        if !yearRange.contains(selectedYear) {
+            return "Choose a year between \(yearRange.lowerBound) and \(yearRange.upperBound)."
+        }
+
+        return nil
+    }
+
     var body: some View {
         Form {
+            Section {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Connect GitHub")
+                        .font(.headline)
+
+                    Text("Create a GitHub Personal Access Token, copy it once, and paste it below. Public contribution data does not need repository write access.")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Link("Open GitHub token settings", destination: URL(string: "https://github.com/settings/tokens")!)
+                        .font(.callout)
+                }
+                .padding(.vertical, 2)
+            }
+
             Section {
                 TextField("GitHub username", text: $username)
                     .textFieldStyle(.roundedBorder)
@@ -25,6 +65,11 @@ struct SettingsView: View {
 
                 Stepper(value: $selectedYear, in: yearRange) {
                     Text("Year: \(selectedYear)")
+                }
+
+                if let validationMessage {
+                    Label(validationMessage, systemImage: "exclamationmark.circle")
+                        .foregroundStyle(.orange)
                 }
             } footer: {
                 VStack(alignment: .leading, spacing: 8) {
@@ -42,7 +87,7 @@ struct SettingsView: View {
                         await testFetch()
                     }
                 }
-                .disabled(status == .checking)
+                .disabled(status == .checking || validationMessage != nil)
 
                 Spacer()
 
@@ -75,9 +120,11 @@ struct SettingsView: View {
     }
 
     private func updateStatusForStoredValues() {
-        if username.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if let validationMessage {
+            status = .fallback(validationMessage)
+        } else if trimmedUsername.isEmpty {
             status = .fallback("Mock fallback is active because no username is saved.")
-        } else if token.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        } else if trimmedToken.isEmpty {
             status = .fallback("Mock fallback is active because no token is saved.")
         } else {
             status = .ready("Settings saved for \(selectedYear). The widget will fetch GitHub data on refresh.")
@@ -95,10 +142,7 @@ struct SettingsView: View {
 
     @MainActor
     private func testFetch() async {
-        let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedToken = token.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        guard !trimmedUsername.isEmpty, !trimmedToken.isEmpty else {
+        guard validationMessage == nil else {
             updateStatusForStoredValues()
             saveAndReloadWidget()
             return
