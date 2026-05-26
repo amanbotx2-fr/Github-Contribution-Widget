@@ -8,8 +8,12 @@ struct SettingsView: View {
     @State private var token = ""
     @State private var status = SettingsStatus.fallback("Mock fallback is active until username and token are saved.")
 
-    private var yearRange: ClosedRange<Int> {
-        2008...Calendar.current.component(.year, from: Date())
+    private var currentYear: Int {
+        Calendar.current.component(.year, from: Date())
+    }
+
+    private var recentYears: [Int] {
+        Array(stride(from: currentYear, through: 2018, by: -1))
     }
 
     private var trimmedUsername: String {
@@ -29,8 +33,8 @@ struct SettingsView: View {
             return "Paste a GitHub Personal Access Token."
         }
 
-        if !yearRange.contains(selectedYear) {
-            return "Choose a year between \(yearRange.lowerBound) and \(yearRange.upperBound)."
+        if !recentYears.contains(selectedYear) {
+            return "Choose a year between 2018 and \(currentYear)."
         }
 
         return nil
@@ -63,9 +67,13 @@ struct SettingsView: View {
                     .textFieldStyle(.roundedBorder)
                     .onSubmit(saveAndReloadWidget)
 
-                Stepper(value: $selectedYear, in: yearRange) {
-                    Text("Year: \(selectedYear)")
+                Picker("Year", selection: $selectedYear) {
+                    ForEach(recentYears, id: \.self) { year in
+                        Text(String(year))
+                            .tag(year)
+                    }
                 }
+                .pickerStyle(.menu)
 
                 if let validationMessage {
                     Label(validationMessage, systemImage: "exclamationmark.circle")
@@ -103,6 +111,9 @@ struct SettingsView: View {
         .onAppear {
             GitHubSettings.migrateLegacyTokenIfNeeded()
             token = GitHubSettings.personalAccessToken
+            if !recentYears.contains(selectedYear) {
+                selectedYear = currentYear
+            }
             updateStatusForStoredValues()
         }
         .onChange(of: username) { _, _ in
